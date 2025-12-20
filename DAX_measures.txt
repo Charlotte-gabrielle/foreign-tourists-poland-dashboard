@@ -1,0 +1,63 @@
+# DAX Measures – Foreign Tourists in Poland Dashboard
+
+Below attached main DAX measures used n the project
+
+Total Tourists = 
+SUM(Summary[Number of persons in thousand])
+
+-----
+
+Total Expenditures 2024 = 
+CALCULATE(
+    SUM('Summary'[Expenditures in million PLN]),
+    REMOVEFILTERS('Summary'),
+    'Summary'[Year] = 2024
+)
+
+-----
+
+Expenditures YoY % = 
+SELECTEDVALUE('Summary'[Expenditures in million PLN yoy])
+
+----
+
+Expenditures YoY Display = 
+VAR yoy = [Expenditures YoY %]
+RETURN
+IF(
+    ISBLANK(yoy),
+    BLANK(),
+    IF(
+        yoy > 0,
+        "↑ " & FORMAT(yoy, "0%") & " y-o-y",
+        IF(
+            yoy < 0,
+            "↓ " & FORMAT(ABS(yoy), "0%") & " y-o-y",
+            "→ 0% y-o-y"
+        )
+    )
+)
+
+-----
+
+CAGR 2019-2024 = 
+VAR StartValue =
+    CALCULATE(
+        SUM('summary'[Number of persons in thousand]),
+        'summary'[Year] = 2019,
+        ALL('summary')
+    )
+VAR EndValue =
+    CALCULATE(
+        SUM('summary'[Number of persons in thousand]),
+        'summary'[Year] = 2024,
+        ALL('summary')
+    )
+VAR NumberOfYears = 2024 - 2019
+RETURN
+IF(
+    StartValue > 0,
+    POWER(EndValue / StartValue, 1 / NumberOfYears) - 1,
+    BLANK()
+)
+

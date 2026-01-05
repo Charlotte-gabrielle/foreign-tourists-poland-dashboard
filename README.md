@@ -26,7 +26,7 @@ The dashboard shows:
 
       Overview (2019-2024)
 
-      Selected year (2024)
+      Selected year (2023)
 
   -DAX Measures
   
